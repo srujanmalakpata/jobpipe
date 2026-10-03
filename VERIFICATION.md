@@ -1,5 +1,7 @@
 # jobpipe verification
 
+## Recorded Linux measurements (2026-10-03)
+
 - **Measurement date:** 2026-10-03. Clean-run setup excludes existing `.venv`, `data/`,
   dbt `target/`/`logs/`, caches, `__pycache__` and `infra/gcp/.terraform`.
 - **Environment:** a shared 4-vCPU Linux container (x86_64, Ubuntu 24.04), running other
@@ -99,3 +101,44 @@
 - Fixture data is synthetic. Only aggregate counts from the single live run are recorded;
   live payloads were never added to the repository, and those counts are a point-in-time
   snapshot from an earlier code version.
+
+## Local checks (2026-10-03)
+
+Environment: macOS (Darwin 27.0.0), arm64; Python 3.11.15, uv 0.11.21,
+dbt-core 1.12.5, dbt-duckdb 1.11.0, DuckDB 1.5.6, pytest 8.4.2 and ruff 0.16.10.
+These results are separate from the recorded Linux measurements above. Timings are
+observations under concurrent local work, not performance comparisons.
+
+The initial dependency sync selected Python 3.12 and could not download packages
+because DNS/network access was restricted. A previously populated local uv cache was
+copied into the ignored `.uv-cache/`; the frozen sync then succeeded offline with
+Python 3.11. Commands below used `UV_CACHE_DIR="$PWD/.uv-cache"` and `UV_OFFLINE=1`
+after that recovery; sync also used `UV_PYTHON=3.11`. No dependencies or lockfile
+versions were changed.
+
+| Check / command | Result | Evidence |
+|---|---|---|
+| Initial `uv sync --frozen --extra dev` with an empty project cache | BLOCKED | Package downloads failed: `files.pythonhosted.org` DNS lookup unavailable. |
+| `uv sync --frozen --extra dev` with the populated cache and Python 3.11 | PASS | Installed 69 locked packages into the project-local `.venv`. |
+| `uv run ruff check . && uv run ruff format --check .` | PASS | `All checks passed!`; `32 files already formatted`. |
+| `uv run pytest -q` | PASS | `107 passed in 48.67s`; includes the real dbt integration tests and mocked HTTP tests. |
+| `uv run pipeline run` followed by `uv run pipeline run --data-dir data` | PASS | Each run: 29/30 board snapshots ok, 372 postings landed, 2 rejected; dbt `pass=103, success=26`. The failed snapshot is the expected injected HTTP 500. |
+| `cmp` of first/repeated Markdown and HTML; `cmp docs/sample_report.md data/reports/report.md` | PASS | Both report formats were byte-identical across runs; Markdown also matched the committed sample. |
+| Warehouse queries after the fixture run | PASS | 115 distinct postings, 116 spells, 68 open; 365 daily rows and 427 posting-skill pairs. |
+| Quickstart report-display command (`uv run python -c "from pathlib import Path; print(Path('data/reports/report.md').read_text())"`) | PASS | Printed the generated Markdown report. Fixture run and sync are covered above; a fresh remote clone was not attempted. |
+| README local links, Quickstart command count and generated sample-table comparison | PASS | Local links resolve; Quickstart has 5 commands; its preview table matches generated output. |
+| Parse `.github/workflows/ci.yml` with PyYAML | PASS | Jobs: `lint`, `test`, `dbt-build`, `terraform`, `docker`. |
+| `actionlint` | NOT_RUN | Executable is not installed. YAML parsing alone does not validate workflow expressions. |
+| `terraform fmt -check -recursive`, `terraform init -backend=false -input=false`, `terraform validate` in `infra/gcp` | NOT_RUN | All commands could not start: Terraform is not installed. No provider downloads or cloud calls occurred. |
+| `docker version`; `docker build -t jobpipe:check-20261003 .` | BLOCKED | Docker client 29.8.1 and buildx 0.37.2 are installed, but the sandbox denies access to the Colima daemon socket. Build did not start. |
+| Network-disabled Docker fixture run | BLOCKED | Requires daemon access and a built image; the build above was blocked. |
+| Hosted GitHub Actions execution | NOT_RUN | No hosted workflow was triggered or inspected. Local checks cover the Python/dbt jobs; Terraform and Docker remain unverified in this run. |
+| Live provider run, BigQuery target, Terraform plan/apply | NOT_RUN | Not repeated; historical live payloads are unavailable, and no cloud credentials or deployments were used. Known BigQuery SQL gaps remain documented in DESIGN.md. |
+| Mermaid rendering | NOT_RUN | Diagram retained; no local renderer was available or installed. |
+| `git diff --check`; tracked-output inventory and ignore-rule checks | PASS | No whitespace errors or tracked build outputs; Python, dbt, pipeline and Terraform outputs are ignored. LICENSE unchanged. |
+
+The prior macOS run recorded no unresolved failing checks; its Docker rerun passed.
+No runtime defect was reproduced here. Documentation now includes the generated
+fixture preview, a short Quickstart and the output-directory permissions used by CI
+for its non-root Docker run. Historical timings and live figures remain explicitly
+qualified rather than being presented as current measurements.
