@@ -1,0 +1,15 @@
+role_family,display_name,archetype
+software_engineering,Software engineering,software
+data_engineering,Data engineering,data
+data_analytics,Data & business analytics,business
+data_science_ml,Data science & ML,ml
+devops_infra,DevOps & infrastructure,infra
+qa_test,QA & test,qa
+embedded_hardware,Embedded & hardware,embedded
+security,Security,infra
+product_management,Product management,business
+design,Design,frontend
+sales_business,Sales & business,business
+program_management,Program & project management,business
+corporate_functions,Corporate functions (people / finance / legal),business
+other,Other,other

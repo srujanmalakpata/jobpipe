@@ -1,0 +1,10 @@
+# Synthetic boards served from fixtures/responses/. Every company here is invented.
+defaults:
+  min_interval_seconds: 0.0
+  max_attempts: 3
+boards:
+  - {source: greenhouse, board: northwindrobotics, company: Northwind Robotics}
+  - {source: greenhouse, board: mapleledger, company: Maple Ledger}
+  - {source: lever, board: auroralabs, company: Aurora Health Labs}
+  - {source: lever, board: tidewaterlogistics, company: Tidewater Logistics}
+  - {source: ashby, board: glaciergames, company: Glacier Games}

@@ -1,0 +1,46 @@
+text,skill,should_match
+we write python every day,Python,true
+javascript and typescript on the frontend,Java,false
+java and kotlin services,Java,true
+modern c++17 and cmake,C++,true
+c# and .net 8,C#,true
+c# and .net 8,.NET,true
+the network team,.NET,false
+own our go-to-market motion,Go,false
+"services written in go, python and rust",Go,true
+excellent communication skills,Excel,false
+advanced excel and pivot tables,Excel,true
+postgresql and sql,SQL,true
+postgresql only,SQL,false
+postgresql only,PostgreSQL,true
+build ci/cd pipelines,CI/CD,true
+a/b testing at scale,A/B testing,true
+our community team,Unity,false
+ros 2 navigation stack,ROS,true
+work across teams,ROS,false
+embedded c and c/c++ firmware,C,true
+series c funded startup,C,false
+trust and safety,Rust,false
+reactive programming,React,false
+react and redux,React,true
+google cloud (gcp),Google Cloud,true
+go onsite and meet with customers,Go,false
+anything that can go wrong will go wrong,Go,false
+"java and go for backend services",Go,true
+"python, bash, go or similar languages",Go,true
+"we write services in go.",Go,true
+our hiring process is accessible to everyone,Accessibility,false
+web accessibility (wcag 2.2),Accessibility,true
+accessibility testing with axe,Accessibility,true
+you will excel in this role,Excel,false
+strive to excel at everything,Excel,false
+"sql, excel and tableau",Excel,true
+"hands-on experience with sql, a/b testing and excel.",Excel,true
+you will work mostly in excel with a cross-functional team,Excel,true
+"work on the go, anywhere",Go,false
+we are ready to go.,Go,false
+you will work mostly in go with a cross-functional team,Go,true
+unity in diversity,Unity,false
+"c++, c#, unity and git",Unity,true
+you will work mostly in unity with the team,Unity,true
+unity3d and unreal engine,Unity,true

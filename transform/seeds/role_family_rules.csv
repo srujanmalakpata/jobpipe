@@ -1,0 +1,14 @@
+priority,role_family,pattern
+10,data_science_ml,\b(machine learning|ml|ai|applied scientist|research scientist|data scientist)\b
+20,data_engineering,\b(data engineer|analytics engineer|data platform)
+30,security,\b(security|appsec)\b
+40,data_analytics,\banalyst\b|\banalytics\b
+50,devops_infra,\b(site reliability|sre|devops|platform engineer|infrastructure|cloud engineer)\b
+60,qa_test,\b(qa|quality assurance|test|sdet)\b
+70,embedded_hardware,\b(embedded|firmware|hardware|robotics|electrical)\b
+80,product_management,\bproduct (manager|owner)\b
+85,program_management,\b(program|project|delivery) manager\b|\btechnical program\b|\bscrum master\b
+90,design,\b(designer|ux|ui)\b
+100,software_engineering,\b(software|developer|engineer|engineering|programmer|backend|frontend|full[- ]stack|mobile|ios|android)\b
+110,sales_business,"\b(account (executive|manager)|sales|marketing|operations|business development|customer|partner(ships)?|strategist|solutions|gtm|go-to-market|commercial|deal desk|pricing|consultant)\b"
+120,corporate_functions,"\b(recruit(er|ing)|talent|people|hr|finance|accounting|accountant|counsel|legal|compliance|risk|administrative|executive assistant|payroll|tax|audit)\b"

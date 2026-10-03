@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: int_postings__unioned
+    description: Union of all provider staging models, one row per posting per snapshot.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            columns: [posting_key, snapshot_date]
+
+  - name: int_postings__classified
+    description: Postings with role family, seniority and location key.
+    columns:
+      - name: role_family
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('role_families')
+                field: role_family
+      - name: seniority
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [intern, entry, mid, senior, staff_plus]

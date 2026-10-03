@@ -1,0 +1,21 @@
+# Example live configuration: a few well-known companies' PUBLIC job boards.
+# Used only with `pipeline run --live`. These endpoints are public, unauthenticated, and
+# meant for job-board embedding; keep the list short and the interval polite.
+# Board tokens change when companies switch providers; a 404 is recorded as a failed
+# snapshot and does not stop the other boards.
+# Data-quality guards (defaults shown in src/jobpipe/config.py): max_reject_ratio (0.2) and
+# max_drop_ratio (0.8: a board whose count collapses vs its previous snapshot is recorded as
+# contract_failed instead of closing its postings). A board entry may set its own
+# max_drop_ratio (null disables the guard for that board); to accept one genuine drop for a
+# single run, use `pipeline run --live --accept-drop source:board` instead.
+# Live data lands in data/live by default, separate from the synthetic fixture lake.
+defaults:
+  min_interval_seconds: 2.0
+  max_attempts: 4
+  backoff_base_seconds: 2.0
+  timeout_seconds: 30
+boards:
+  - {source: greenhouse, board: airbnb, company: Airbnb}
+  - {source: greenhouse, board: stripe, company: Stripe}
+  - {source: lever, board: palantir, company: Palantir}
+  - {source: ashby, board: ramp, company: Ramp}

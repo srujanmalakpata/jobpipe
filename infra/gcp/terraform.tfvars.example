@@ -1,0 +1,3 @@
+# Copy to terraform.tfvars (git-ignored) only if you intend to plan against a real project.
+project_id = "my-gcp-project"
+region     = "northamerica-northeast1"

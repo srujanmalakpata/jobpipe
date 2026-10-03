@@ -1,0 +1,58 @@
+skill,category,pattern
+Python,language,\bpython\b
+Java,language,\bjava\b
+JavaScript,language,\bjavascript\b
+TypeScript,language,\btypescript\b
+Go,language,"\bgolang\b|(^|[,/(]\s*|\b(and|or|in|with|using)\s)go([,/);]|\.(\s|$)|$|\s+(and|or|with)\s)|\b(java|python|rust|ruby|scala|kotlin|javascript|typescript|c\+\+|c#|elixir),? (and|or) go\b"
+Rust,language,\brust\b
+C++,language,(^|[^a-z0-9])c\+\+
+C#,language,(^|[^a-z0-9])c#
+C,language,\bembedded c([^a-z0-9+#]|$)|(^|[^a-z0-9])c/c\+\+
+SQL,language,\bsql\b
+Bash,language,\bbash\b|\bshell scripting\b
+React,framework,\breact\b
+Node.js,framework,\bnode\.?js\b
+Spring Boot,framework,\bspring boot\b
+.NET,framework,(^|[^a-z0-9])\.net\b|\bdotnet\b
+FastAPI,framework,\bfastapi\b
+GraphQL,api,\bgraphql\b
+REST API,api,\brest(ful)? apis?\b
+AWS,cloud,\baws\b|\bamazon web services\b
+Azure,cloud,\bazure\b
+Google Cloud,cloud,\bgcp\b|\bgoogle cloud\b
+Docker,devops,\bdocker\b
+Kubernetes,devops,\bkubernetes\b|\bk8s\b
+Terraform,devops,\bterraform\b
+CI/CD,devops,\bci/cd\b|\bcontinuous integration\b
+Linux,devops,\blinux\b
+Prometheus,observability,\bprometheus\b
+Grafana,observability,\bgrafana\b
+Git,tool,\bgit\b
+PostgreSQL,database,\bpostgres(ql)?\b
+Kafka,data,\bkafka\b
+Spark,data,\b(py)?spark\b
+Airflow,data,\bairflow\b
+dbt,data,\bdbt\b
+Snowflake,data,\bsnowflake\b
+BigQuery,data,\bbigquery\b
+Data warehousing,data,\bdata warehous(e|es|ing)\b
+pandas,data,\bpandas\b
+NumPy,data,\bnumpy\b
+Machine learning,ml,\bmachine learning\b|\bml\b
+PyTorch,ml,\bpytorch\b
+TensorFlow,ml,\btensorflow\b
+scikit-learn,ml,\bscikit-learn\b|\bsklearn\b
+Statistics,analytics,\bstatistic(s|al)\b
+A/B testing,analytics,\ba/b test(s|ing)?\b
+Tableau,analytics,\btableau\b
+Power BI,analytics,\bpower bi\b
+Excel,analytics,"\b(ms|microsoft|advanced|in|with|using) excel\b|\b(and|or) excel([.,;)]|$)|[,/(]\s*excel\b|\bexcel( (spreadsheets?|formulas?|pivot|vba|macros?|models?|modell?ing|dashboards?|skills|and|or)\b|[,/)])"
+Selenium,testing,\bselenium\b
+Playwright,testing,\bplaywright\b
+pytest,testing,\bpytest\b
+ROS,robotics,\bros ?2?\b
+Unity,games,"\bunity ?3d\b|\bunity (engine|editor)\b|(\b(in|with|using|and|or)\s|[,/(]\s*)unity\b|\bunity([,/)]| (and|or) )"
+Unreal Engine,games,\bunreal( engine)?\b
+Figma,design,\bfigma\b
+Accessibility,design,\bwcag\b|\ba11y\b|\b(web|digital|mobile|product) accessibility\b|\baccessibility (testing|standards|guidelines|best practices|audits?)\b
+Salesforce,business,\bsalesforce\b

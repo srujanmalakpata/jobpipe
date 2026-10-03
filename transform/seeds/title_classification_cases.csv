@@ -1,0 +1,27 @@
+title,role_family,seniority
+Software Engineering Intern (Winter 2027),software_engineering,intern
+Data Engineer Co-op (Summer 2027),data_engineering,intern
+Junior Backend Developer,software_engineering,entry
+"Software Engineer, New Grad",software_engineering,entry
+Associate Software Engineer,software_engineering,entry
+Associate Product Manager,product_management,entry
+Graduate Software Engineer,software_engineering,entry
+"Senior Associate, Data Analytics",data_analytics,senior
+"Associate Director, Engineering",software_engineering,staff_plus
+Associate General Counsel,corporate_functions,mid
+Graduate Research Advisor - Principal,other,staff_plus
+Senior Machine Learning Engineer,data_science_ml,senior
+Staff Site Reliability Engineer,devops_infra,staff_plus
+Principal Data Scientist,data_science_ml,staff_plus
+Engineering Team Lead,software_engineering,senior
+Head of Data Platform,data_engineering,staff_plus
+Business Intelligence Analyst,data_analytics,mid
+Analytics Engineer,data_engineering,mid
+QA Automation Engineer,qa_test,mid
+Embedded Software Engineer,embedded_hardware,mid
+Application Security Analyst,security,mid
+Technical Program Manager,program_management,mid
+Product Designer,design,mid
+Account Executive,sales_business,mid
+Internal Tools Engineer,software_engineering,mid
+Recruiting Coordinator,corporate_functions,mid

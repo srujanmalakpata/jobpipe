@@ -1,0 +1,30 @@
+# Profiles live in the repo because nothing here is secret: the DuckDB path and the GCP
+# project come from environment variables. `pipeline` sets JOBPIPE_DUCKDB_PATH and
+# JOBPIPE_BRONZE_DIR before invoking dbt.
+job_market:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('JOBPIPE_DUCKDB_PATH', '../data/warehouse.duckdb') }}"
+      threads: 2
+      settings:
+        TimeZone: UTC
+
+    # Documented cloud target - NOT used by the pipeline and never run in this repo.
+    # Requires `pip install dbt-bigquery`, the datasets from infra/gcp, and Application
+    # Default Credentials for a user allowed to impersonate the pipeline service account
+    # (`gcloud auth application-default login --impersonate-service-account=<sa email>`).
+    # No service-account key files. Models land in job_market_<layer> datasets (see
+    # macros/generate_schema_name.sql). Known gaps before this target can build are listed
+    # in DESIGN.md ("Cloud option"): bronze is read with DuckDB's read_json from the local
+    # lake, and some SQL (list functions, epoch_ms, union by name) is DuckDB-only.
+    bigquery:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('JOBPIPE_GCP_PROJECT', 'replace-me') }}"
+      dataset: job_market
+      location: northamerica-northeast1
+      threads: 4
+      job_execution_timeout_seconds: 300
+      priority: interactive

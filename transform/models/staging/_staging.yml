@@ -1,0 +1,76 @@
+version: 2
+
+models:
+  - name: stg_bronze__postings
+    description: Raw posting lines from the bronze lake, one per line, payload kept as JSON.
+    columns:
+      - name: posting_key
+        data_tests: [not_null]
+      - name: source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [greenhouse, lever, ashby]
+      - name: snapshot_date
+        data_tests: [not_null]
+
+  - name: stg_bronze__extract_manifests
+    description: One row per board extraction attempt; tells "closed" apart from "not observed".
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            columns: [company_key, snapshot_date]
+    columns:
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [ok, failed, contract_failed]
+      - name: fetch_mode
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [live, fixture]
+      - name: posting_count
+        data_tests: [not_null]
+
+  - name: stg_bronze__unparsed_postings
+    description: >
+      Postings listed in a successful snapshot whose record failed the extract contract
+      (ids taken from the manifest). Used only to keep lifecycle spells unbroken.
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            columns: [posting_key, snapshot_date]
+    columns:
+      - name: posting_key
+        data_tests: [not_null]
+
+  - name: stg_greenhouse__postings
+    description: Greenhouse postings normalized to the common posting schema.
+    columns: &posting_columns
+      - name: posting_key
+        data_tests: [not_null]
+      - name: title
+        data_tests: [not_null]
+      - name: workplace_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [remote, hybrid, onsite, unknown]
+      - name: employment_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [full_time, part_time, contract, internship, unknown]
+      - name: posting_url
+        data_tests: [not_null]
+
+  - name: stg_lever__postings
+    description: Lever postings normalized to the common posting schema.
+    columns: *posting_columns
+
+  - name: stg_ashby__postings
+    description: Listed Ashby jobs normalized to the common posting schema.
+    columns: *posting_columns

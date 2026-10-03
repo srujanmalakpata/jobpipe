@@ -1,0 +1,44 @@
+name: job_market
+version: "0.1.0"
+config-version: 2
+profile: job_market
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages", "logs"]
+
+models:
+  job_market:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      core:
+        +materialized: table
+        +schema: core
+      analytics:
+        +materialized: table
+        +schema: analytics
+
+seeds:
+  job_market:
+    +schema: reference
+    skill_vocabulary:
+      +column_types: {skill: varchar, category: varchar, pattern: varchar}
+    skill_pattern_cases:
+      +column_types: {text: varchar, skill: varchar, should_match: boolean}
+    title_classification_cases:
+      +column_types: {title: varchar, role_family: varchar, seniority: varchar}
+    role_family_rules:
+      +column_types: {priority: integer, role_family: varchar, pattern: varchar}
+    role_families:
+      +column_types: {role_family: varchar, display_name: varchar, archetype: varchar}
+    geo_aliases:
+      +column_types: {alias: varchar, kind: varchar, region: varchar, country: varchar, also_country: varchar}
+    geo_location_cases:
+      +column_types: {location_raw: varchar, region: varchar, country: varchar}

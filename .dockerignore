@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+.uv-cache
+.pytest_cache
+.ruff_cache
+**/__pycache__
+data
+infra
+docs
+tests
+transform/target
+transform/logs

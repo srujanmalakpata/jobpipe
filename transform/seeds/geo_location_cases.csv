@@ -1,0 +1,21 @@
+location_raw,region,country
+"Toronto, ON",Ontario,Canada
+"Toronto, CA",Ontario,Canada
+"Toronto, Ontario, Canada",Ontario,Canada
+"San Francisco, CA",California,United States
+"Sacramento, CA",California,United States
+"Austin, TX",Texas,United States
+"London, ON",Ontario,Canada
+"London, UK",,United Kingdom
+London,,United Kingdom
+"Bengaluru, IN",Karnataka,India
+"Hyderabad, IN",Telangana,India
+"Bengaluru, Karnataka, India",Karnataka,India
+"Indianapolis, IN",Indiana,United States
+"Pune, IN",Maharashtra,India
+"Nagpur, IN",Indiana,United States
+"Remote - Canada",,Canada
+"Remote (US)",,United States
+"New York, NY",New York,United States
+"Seattle, WA / Remote",Washington,United States
+"Dublin, Ireland",,Ireland

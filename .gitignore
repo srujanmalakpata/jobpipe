@@ -1,0 +1,42 @@
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.uv-cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Pipeline outputs (bronze lake, DuckDB warehouse, reports, HTTP cache) - never committed;
+# live extractions in particular must stay local.
+data/
+*.duckdb
+*.duckdb.wal
+
+# dbt
+transform/target/
+transform/logs/
+transform/dbt_packages/
+logs/
+
+# Terraform
+infra/gcp/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+
+# Local secrets / editor noise
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/

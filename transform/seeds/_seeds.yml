@@ -1,0 +1,66 @@
+version: 2
+
+seeds:
+  - name: skill_vocabulary
+    description: Skills to detect in postings with the RE2 regex used to find them.
+    columns:
+      - name: skill
+        data_tests: [unique, not_null]
+      - name: pattern
+        data_tests: [not_null]
+  - name: skill_pattern_cases
+    description: Executable examples of what each skill pattern must / must not match.
+    columns:
+      - name: skill
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('skill_vocabulary')
+                field: skill
+  - name: title_classification_cases
+    description: Executable examples of the role-family rules and the seniority macro.
+    columns:
+      - name: title
+        data_tests: [unique, not_null]
+      - name: role_family
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('role_families')
+                field: role_family
+      - name: seniority
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [intern, entry, mid, senior, staff_plus]
+  - name: role_family_rules
+    columns:
+      - name: priority
+        data_tests: [unique, not_null]
+      - name: role_family
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('role_families')
+                field: role_family
+  - name: role_families
+    columns:
+      - name: role_family
+        data_tests: [unique, not_null]
+  - name: geo_aliases
+    description: >
+      Location aliases (region codes, countries, cities). also_country marks a region code
+      that is also an ISO country code (CA, IN); see macros/geo.sql for the precedence.
+    columns:
+      - name: alias
+        data_tests: [unique, not_null]
+      - name: kind
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [region, country, city]
+  - name: geo_location_cases
+    description: Executable examples of location parsing (macros/geo.sql), incl. known ambiguities.
+    columns:
+      - name: location_raw
+        data_tests: [unique, not_null]

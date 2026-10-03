@@ -1,0 +1,140 @@
+version: 2
+
+models:
+  - name: fct_posting_daily
+    description: >
+      Snapshot fact, grain = posting x successful board snapshot. Incremental
+      (delete+insert per board-day partition, reprocessed when its landing_id changes).
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            columns: [posting_key, snapshot_date]
+    columns:
+      - name: posting_key
+        data_tests: [not_null]
+      - name: landing_id
+        description: >
+          extracted_at + content hash of the bronze landing these rows came from; a
+          partition is reprocessed when its manifest's landing_id differs.
+        data_tests: [not_null]
+      - name: company_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_company')
+                field: company_key
+      - name: location_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_location')
+                field: location_key
+      - name: role_family
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_role_family')
+                field: role_family
+
+  - name: fct_postings
+    description: >
+      Posting lifecycle (SCD2-style spells) with first_seen / last_seen / closed_at.
+      Incremental (delete+insert per board when its snapshot watermark changes).
+    columns:
+      - name: posting_spell_key
+        data_tests: [unique, not_null]
+      - name: posting_key
+        data_tests: [not_null]
+      - name: first_seen
+        data_tests: [not_null]
+      - name: last_seen
+        data_tests:
+          - not_null
+          - not_before:
+              arguments:
+                reference: first_seen
+      - name: closed_at
+        data_tests:
+          - not_before:
+              arguments:
+                reference: last_seen
+                strict: true
+      - name: unparsed_snapshots
+        description: Snapshots in the spell where the posting was listed but failed the contract.
+        data_tests:
+          - not_null
+          - between:
+              arguments:
+                min_value: 0
+                max_value: 1000
+      - name: spell_number
+        data_tests:
+          - not_null
+          - between:
+              arguments:
+                min_value: 1
+                max_value: 1000
+      - name: days_to_close
+        data_tests:
+          - between:
+              arguments:
+                min_value: 1
+                max_value: 3650
+      - name: role_family
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_role_family')
+                field: role_family
+      - name: workplace_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [remote, hybrid, onsite, unknown]
+      - name: seniority
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [intern, entry, mid, senior, staff_plus]
+
+  - name: dim_company
+    columns:
+      - name: company_key
+        data_tests: [unique, not_null]
+      - name: source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [greenhouse, lever, ashby]
+
+  - name: dim_location
+    columns:
+      - name: location_key
+        data_tests: [unique, not_null]
+      - name: country
+        data_tests: [not_null]
+
+  - name: dim_role_family
+    columns:
+      - name: role_family
+        data_tests: [unique, not_null]
+
+  - name: bridge_posting_skill
+    data_tests:
+      - unique_combination_of_columns:
+          arguments:
+            columns: [posting_key, skill]
+    columns:
+      - name: posting_key
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fct_postings')
+                field: posting_key
+      - name: skill
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('skill_vocabulary')
+                field: skill

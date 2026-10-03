@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.8.17"
+  PYTHON_VERSION: "3.11"
+  DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen --extra dev
+      - name: ruff check
+        run: uv run ruff check .
+      - name: ruff format
+        run: uv run ruff format --check .
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen --extra dev
+      - name: pytest (unit + dbt integration on synthetic fixtures, no network)
+        run: uv run pytest -q
+
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: uv sync --frozen --extra dev
+      - name: Pipeline on fixtures (extract -> dbt build -> report)
+        run: uv run pipeline run --data-dir data
+      - name: Re-run is idempotent
+        run: |
+          cp data/reports/report.md /tmp/first.md
+          uv run pipeline run --data-dir data
+          diff -u /tmp/first.md data/reports/report.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fixture-report
+          path: data/reports/
+
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/gcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false -input=false
+      - run: terraform validate
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t jobpipe:ci .
+      - name: Run pipeline in the container (fixture mode, no network)
+        run: |
+          mkdir -p data && chmod 777 data
+          docker run --rm --network none -v "$PWD/data:/data" jobpipe:ci run
+          test -s data/reports/report.html
